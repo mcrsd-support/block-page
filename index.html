@@ -9,25 +9,18 @@
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; background-color: #121212; color: #fcfcfc; font-family: 'Roboto', Arial, sans-serif; overflow: hidden; }
         .background-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #333 0%, #121212 100%); z-index: -1; }
         .card { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 650px; padding: 25px; text-align: center; border-radius: 8px; border: 2px solid #00AAD7; background: rgba(18, 18, 18, 0.98); box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box; }
-        
-        #btn-lang { background-color: transparent; color: #00AAD7; border: 2px solid #00AAD7; padding: 10px 20px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; margin-bottom: 15px; }
+        #btn-lang { background-color: transparent; color: #00AAD7; border: 2px solid #00AAD7; padding: 10px 20px; border-radius: 4px; font-weight: 700; text-transform: uppercase; cursor: pointer; margin-bottom: 15px; }
         #btn-lang:hover { background-color: #00AAD7; color: #121212; }
-        
         .district-header { color: #dfdfdf; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         h1 { color: #00AAD7; font-size: 32px; font-weight: 900; margin: 10px 0; }
-        
         .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0, 0, 0, 0.6); border: 1px solid #444; border-radius: 4px; padding: 15px; text-align: left; font-size: 13px; margin: 15px 0; }
         .data-grid div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-bottom: 1px solid #222; padding: 4px 0; }
         .data-grid b { color: #00AAD7; text-transform: uppercase; font-size: 10px; margin-right: 5px; }
         .full-width { grid-column: span 2; }
-
         .action-area { margin: 15px 0; padding: 15px; border-radius: 4px; background: rgba(232, 66, 90, 0.1); border: 1px solid #e8425a; }
-        button#unblockreq { background-color: #00AAD7; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; max-width: 300px; }
-        button:disabled { background-color: #444; cursor: not-allowed; }
-
+        button#unblockreq { background-color: #00AAD7; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; }
         footer { margin-top: 20px; font-size: 10px; color: #666; display: flex; justify-content: space-between; align-items: center; }
         .compliance-tag { color: #888; border: 1px solid #444; padding: 2px 6px; border-radius: 3px; font-size: 9px; }
-
         .es-text { display: none; }
         .spanish-mode .en-text { display: none; }
         .spanish-mode .es-text { display: inline-block; }
@@ -38,38 +31,27 @@
 <main class="card" role="alert">
     <button id="btn-lang" type="button">English / Español</button>
     <div class="district-header" id="cname">MARICOPA COUNTY REGIONAL SCHOOL DISTRICT</div>
-    
     <h1><span class="en-text">Access Restricted</span><span class="es-text">Acceso Restringido</span></h1>
-    
     <div class="data-grid">
-        <div class="full-width"><b>Student:</b> <span id="uid">---</span></div>
+        <div class="full-width"><b>Student:</b> <span id="uid-display">Scanning...</span></div>
         <div class="full-width"><b>Website:</b> <span id="website">---</span></div>
-        <div><b>OU:</b> <span id="ou">---</span></div>
+        <div><b>OU:</b> <span id="ou-display">---</span></div>
         <div><b>Source:</b> <span id="blocksrc">---</span></div>
         <div class="full-width"><b>Category:</b> <span id="category">---</span></div>
     </div>
-
     <div id="action-box" class="action-area">
         <div id="dynWLform" style="display: none">
             <p style="font-size: 14px;"><span class="en-text">Need this for coursework?</span><span class="es-text">¿Lo necesita para su clase?</span></p>
             <button id="unblockreq">ASK TO UNBLOCK</button>
         </div>
         <div id="antiDynWLform">
-            <p style="font-size: 12px; color: #e8425a;">
-                <span class="en-text">This site cannot be unblocked by teachers.</span>
-                <span class="es-text">Este sitio no puede ser desbloqueado por maestros.</span>
-            </p>
+            <p style="font-size: 12px; color: #e8425a;"><span class="en-text">This site cannot be unblocked by teachers.</span></p>
         </div>
     </div>
-
-    <div id="reclassBlk" style="font-size: 11px; color: #888;">
-        Misclassified? <a id="reclassify" href="#" target="_blank" style="color: #00AAD7;">Report here</a>.
-    </div>
-
     <footer>
         <span style="color: #00AAD7; font-weight: bold;">SECURED BY DELEDAO</span>
         <span class="compliance-tag">ADA & WCAG 2.1 COMPLIANT</span>
-        <span>VER: 1.1.0</span>
+        <span>VER: 1.1.2</span>
     </footer>
 </main>
 
@@ -79,40 +61,40 @@
     });
 
     (function() {
-        const cururl = new URL(window.location.href);
-        const curparams = new URLSearchParams(cururl.search);
+        const urlString = window.location.href;
+        
+        // Custom parser to handle nested ampersands from Google/YouTube URLs
+        function getParam(name) {
+            const results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(urlString);
+            if (!results) return null;
+            return decodeURIComponent(results[1]) || null;
+        }
 
-        // Core Deledao Logic
-        const fill = (id, key) => {
-            let val = curparams.get(key);
-            if (val) document.getElementById(id).innerText = decodeURIComponent(val);
-        };
+        const uid = getParam('uid');
+        const ou = getParam('ou');
+        const site = getParam('site');
+        const cat = getParam('category');
+        const cname = getParam('cname');
+        const pgroup = getParam('pgroup');
 
-        fill("website", "site");
-        fill("category", "category");
-        fill("cname", "cname");
-        fill("uid", "uid");
-        fill("ou", "ou");
+        if (uid) document.getElementById('uid-display').innerText = uid;
+        else document.getElementById('uid-display').innerText = "Not Available";
 
-        // Policy Source Logic
-        let policy = curparams.get("pgroup") || "school";
-        document.getElementById("blocksrc").innerText = policy.toUpperCase();
+        if (ou) document.getElementById('ou-display').innerText = ou;
+        if (cname) document.getElementById('cname').innerText = cname;
+        if (cat) document.getElementById('category').innerText = cat;
+        if (pgroup) document.getElementById('blocksrc').innerText = pgroup.toUpperCase();
 
-        // Reclassify Logic
-        let vendor = curparams.get("vendor") || "default";
-        let reclassifyurl = `https://static.deledao.com/${vendor}/reclassification.html?`;
-        let rParams = new URLSearchParams();
-        rParams.append("site", curparams.get("site"));
-        rParams.append("category", curparams.get("category"));
-        document.getElementById("reclassify").setAttribute("href", reclassifyurl + rParams.toString());
+        if (site) {
+            const cleanSite = site.replace(/^https?:\/\//, '').split('/')[0];
+            document.getElementById('website').innerText = cleanSite;
+        }
 
-        // Unblock Button Logic
-        let nodwl = curparams.get("nodwl");
-        let byParent = curparams.get("pgroup") === "parent" || curparams.get("parent") === "true";
-
-        if (!nodwl && !byParent) {
-            document.getElementById("dynWLform").style.display = "block";
-            document.getElementById("antiDynWLform").style.display = "none";
+        // Logic for unblock button
+        const nodwl = getParam('nodwl');
+        if (!nodwl && pgroup !== 'parent') {
+            document.getElementById('dynWLform').style.display = 'block';
+            document.getElementById('antiDynWLform').style.display = 'none';
         }
     })();
 </script>
