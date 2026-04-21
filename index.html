@@ -10,7 +10,7 @@
         .background-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #333 0%, #121212 100%); z-index: -1; }
         .card { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 650px; padding: 25px; text-align: center; border-radius: 8px; border: 2px solid #00AAD7; background: rgba(18, 18, 18, 0.98); box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box; }
         #btn-lang { background-color: transparent; color: #00AAD7; border: 2px solid #00AAD7; padding: 10px 20px; border-radius: 4px; font-family: 'Roboto', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: all 0.2s ease; margin-bottom: 15px; display: inline-block; }
-        #btn-lang:hover, #btn-lang:focus { background-color: #00AAD7; color: #121212; outline: 3px solid #fff; }
+        #btn-lang:hover { background-color: #00AAD7; color: #121212; }
         .district { color: #dfdfdf; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
         h1 { color: #00AAD7; font-size: 36px; font-weight: 900; margin: 10px 0; }
         .warning { background-color: #ffcc00; color: #000; padding: 8px 15px; font-size: 13px; margin: 10px auto; font-weight: 900; display: inline-block; border-radius: 4px; text-transform: uppercase; }
@@ -19,61 +19,56 @@
         .data-grid b { color: #00AAD7; text-transform: uppercase; font-size: 11px; margin-right: 5px; }
         .full-width { grid-column: span 2; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 2px; }
         .teacher-notes { grid-column: span 2; margin-top: 10px; padding-top: 10px; border-top: 1px solid #444; color: #fff; font-size: 12px; line-height: 1.4; }
-        footer { margin-top: 20px; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+        footer { margin-top: 20px; font-size: 11px; color: #888; text-transform: uppercase; }
         .es-text { display: none; }
         .spanish-mode .en-text { display: none; }
         .spanish-mode .es-text { display: inline-block; }
-        .spanish-mode div.es-text { display: block; }
     </style>
 </head>
 <body id="page-body">
 <div class="background-overlay"></div>
-<main class="card" role="alert" aria-labelledby="main-heading">
+<main class="card">
     <button id="btn-lang" type="button">English / Español</button>
     <div class="district">Maricopa County Regional School District</div>
-    <h1 id="main-heading"><span class="en-text">Access Restricted</span><span class="es-text">Acceso Restringido</span></h1>
+    <h1><span class="en-text">Access Restricted</span><span class="es-text">Acceso Restringido</span></h1>
     <p style="font-size: 18px;"><span class="en-text">This website has been blocked by your administrator.</span><span class="es-text">Este sitio web ha sido bloqueado por su administrador.</span></p>
     <div class="warning"><span class="en-text">Security Violation Logged</span><span class="es-text">Violación de Seguridad Registrada</span></div>
 
     <div class="data-grid">
         <div class="full-width"><b>User:</b> <span id="u-val">---</span></div>
-        <div class="full-width"><b>URL:</b> <span id="url-val">---</span></div>
+        <div class="full-width"><b>Website:</b> <span id="url-val">---</span></div>
         <div><b>OU:</b> <span id="ou-val">---</span></div>
-        <div><b>Rule:</b> <span id="r-val">---</span></div>
-        <div><b>Customer:</b> <span id="c-val">---</span></div>
-        <div><b>Version:</b> <span id="v-val">---</span></div>
-        <div class="full-width"><b>Policy Ver:</b> <span id="pv-val">---</span></div>
+        <div><b>Reason:</b> <span id="r-val">---</span></div>
+        <div><b>District:</b> <span id="c-val">---</span></div>
+        <div><b>Category:</b> <span id="cat-val">---</span></div>
         <div class="teacher-notes">
             <b style="color: #ffcc00;"><span class="en-text">TEACHER ACTION:</span><span class="es-text">ACCIÓN DEL MAESTRO:</span></b><br>
             <span class="en-text">Take a screenshot of this report for the IT Help Desk.</span>
             <span class="es-text">Capture esta pantalla para el soporte técnico.</span>
         </div>
     </div>
-    <footer><span class="en-text">WCAG 2.1 &amp; ADA Compliant Filter Page</span><span class="es-text">Página compatible con ADA y WCAG 2.1</span></footer>
+    <footer>WCAG 2.1 & ADA COMPLIANT</footer>
 </main>
 
 <script>
-    const button = document.getElementById('btn-lang');
-    button.addEventListener('click', () => document.getElementById('page-body').classList.toggle('spanish-mode'));
+    document.getElementById('btn-lang').addEventListener('click', () => document.getElementById('page-body').classList.toggle('spanish-mode'));
 
+    // DELEDAO AUTOMATIC PARAMETERS
+    // site: blocked URL | uid: user email | ou: OU name | cname: district | category: block category
     try {
         const p = new URLSearchParams(window.location.search);
-        const set = (id, val) => { if(val && !val.includes('$')) document.getElementById(id).textContent = val; };
+        
+        document.getElementById('u-val').textContent = p.get('uid') || '---';
+        document.getElementById('ou-val').textContent = p.get('ou') || '---';
+        document.getElementById('r-val').textContent = p.get('pgroup') || 'School Policy';
+        document.getElementById('c-val').textContent = p.get('cname') || 'MCRSD';
+        document.getElementById('cat-val').textContent = p.get('category') || 'Restricted';
 
-        // Shortened keys to prevent "URI Too Long" errors
-        set('u-val', p.get('u'));
-        set('ou-val', p.get('ou'));
-        set('r-val', p.get('r'));
-        set('c-val', p.get('c'));
-        set('v-val', p.get('v'));
-        set('pv-val', p.get('pv'));
-
-        const rawUrl = p.get('url');
-        if (rawUrl && !rawUrl.includes('$')) {
-            // Keep URL short by displaying only the domain
+        const rawUrl = p.get('site');
+        if (rawUrl) {
             document.getElementById('url-val').textContent = rawUrl.replace(/^https?:\/\//, '').split('/')[0];
         }
-    } catch (e) { console.error("Data Load Error:", e); }
+    } catch (e) { console.error(e); }
 </script>
 </body>
 </html>
