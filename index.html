@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Access Restricted | MCRSD</title>
     <style>
+        /* ADA Compliance: Standard, highly readable fonts */
         @import url('https://fonts.googleapis.com/css?family=Roboto:400,700,900');
         
         body, html { 
@@ -19,45 +20,63 @@
             z-index: -1;
         }
 
+        /* Card Container - ADA: High contrast border for visual clarity */
         .card { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 600px; padding: 25px; text-align: center; 
-            border-radius: 8px; border: 1px solid #00AAD7; 
+            width: 95%; max-width: 650px; padding: 25px; text-align: center; 
+            border-radius: 8px; border: 2px solid #00AAD7; 
             background: rgba(18, 18, 18, 0.98);
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             box-sizing: border-box;
         }
 
-        /* Fixed Button Styling */
+        /* Language Button - ADA: Accessible target size and contrast */
         #btn-lang {
             background-color: transparent;
             color: #00AAD7;
-            border: 1px solid #00AAD7;
-            padding: 8px 16px;
+            border: 2px solid #00AAD7;
+            padding: 10px 20px;
             border-radius: 4px;
             font-family: 'Roboto', sans-serif;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: inline-block;
         }
-        #btn-lang:hover { background-color: #00AAD7; color: #121212; }
+        #btn-lang:hover, #btn-lang:focus { background-color: #00AAD7; color: #121212; outline: 3px solid #fff; }
 
-        .district { color: #dfdfdf; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
-        h1 { color: #00AAD7; font-size: 42px; font-weight: 700; margin: 10px 0; }
-        .warning { background-color: #ffcc00; color: #000; padding: 12px; font-size: 14px; margin: 15px auto; font-weight: 900; display: inline-block; border-radius: 4px; text-transform: uppercase; }
+        .district { color: #dfdfdf; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
+        h1 { color: #00AAD7; font-size: 36px; font-weight: 900; margin: 10px 0; }
         
-        .data-box { background: rgba(0, 0, 0, 0.6); border: 2px solid #00AAD7; border-radius: 4px; padding: 20px; text-align: left; font-size: 14px; line-height: 1.6; }
-        .data-box b { color: #00AAD7; }
-        .teacher-notes { margin-top: 15px; padding-top: 15px; border-top: 1px solid #444; color: #fff; font-size: 13px; line-height: 1.5; }
-        
-        footer { margin-top: 30px; font-size: 12.5px; color: #888; text-transform: uppercase; }
+        .warning { 
+            background-color: #ffcc00; color: #000; padding: 8px 15px; 
+            font-size: 13px; margin: 10px auto; font-weight: 900; 
+            display: inline-block; border-radius: 4px; text-transform: uppercase; 
+        }
 
-        /* Toggle Logic */
+        /* Data Grid - Optimized for clarity and technical debugging */
+        .data-grid { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; 
+            background: rgba(0, 0, 0, 0.6); border: 1px solid #444; 
+            border-radius: 4px; padding: 15px; text-align: left; font-size: 13px; 
+        }
+        .data-grid div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .data-grid b { color: #00AAD7; text-transform: uppercase; font-size: 11px; margin-right: 5px; }
+        
+        .full-width { grid-column: span 2; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 2px; }
+        
+        .teacher-notes { 
+            grid-column: span 2; margin-top: 10px; padding-top: 10px; 
+            border-top: 1px solid #444; color: #fff; font-size: 12px; line-height: 1.4; 
+        }
+        
+        footer { margin-top: 20px; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* ADA: Toggle Logic for Spanish Language */
         .es-text { display: none; }
         .spanish-mode .en-text { display: none; }
         .spanish-mode .es-text { display: inline-block; }
@@ -68,39 +87,45 @@
 
 <div class="background-overlay"></div>
 
-<main class="card" role="main">
-    <button id="btn-lang" type="button">English / Español</button>
+<main class="card" role="alert" aria-labelledby="main-heading">
+    <button id="btn-lang" type="button" aria-label="Switch between English and Spanish">English / Español</button>
 
-    <div class="district">Maricopa County<br>Regional School District</div>
+    <div class="district">Maricopa County Regional School District</div>
     
-    <h1>
+    <h1 id="main-heading">
         <span class="en-text">Access Restricted</span>
         <span class="es-text">Acceso Restringido</span>
     </h1>
 
-    <p style="font-size: 18px;">
+    <p style="font-size: 18px; font-weight: 400;">
         <span class="en-text">This website has been blocked by your administrator.</span>
         <span class="es-text">Este sitio web ha sido bloqueado por su administrador.</span>
     </p>
 
     <div class="warning">
-        <span class="en-text">Attempt Logged &amp; Reported</span>
-        <span class="es-text">Intento Registrado e Informado</span>
+        <span class="en-text">Security Violation Logged</span>
+        <span class="es-text">Violación de Seguridad Registrada</span>
     </div>
 
-    <div class="data-box">
-        <div><b><span class="en-text">Student:</span><span class="es-text">Estudiante:</span></b> <span id="user-display">Loading...</span></div>
-        <div><b><span class="en-text">Website:</span><span class="es-text">Sitio Web:</span></b> <span id="url-display">Restricted Site</span></div>
-        <div><b><span class="en-text">Source:</span><span class="es-text">Fuente:</span></b> Deledao Web Filter</div>
-        <div><b><span class="en-text">Policy:</span><span class="es-text">Política:</span></b> <span id="policy-display">Default Policy</span></div>
+    <div class="data-grid">
+        <div class="full-width"><b>User:</b> <span id="u-val">---</span></div>
+        <div class="full-width"><b>URL:</b> <span id="url-val">---</span></div>
         
+        <div><b>OU:</b> <span id="ou-val">---</span></div>
+        <div><b>Rule:</b> <span id="r-val">---</span></div>
+        
+        <div><b>Customer:</b> <span id="c-val">---</span></div>
+        <div><b>Version:</b> <span id="v-val">---</span></div>
+        
+        <div class="full-width"><b>Policy Ver:</b> <span id="pv-val">---</span></div>
+
         <div class="teacher-notes">
             <b style="color: #ffcc00;">
-                <span class="en-text">TEACHER INSTRUCTIONS:</span>
-                <span class="es-text">INSTRUCCIONES PARA EL MAESTRO:</span>
+                <span class="en-text">TEACHER ACTION:</span>
+                <span class="es-text">ACCIÓN DEL MAESTRO:</span>
             </b><br>
-            <span class="en-text">1. Take a screenshot of this entire screen.<br>2. Email it to the Help Desk.</span>
-            <span class="es-text">1. Tome una captura de pantalla completa.<br>2. Envíela al Help Desk.</span>
+            <span class="en-text">Take a screenshot of this report for the IT Help Desk.</span>
+            <span class="es-text">Capture esta pantalla para el soporte técnico.</span>
         </div>
     </div>
 
@@ -111,14 +136,39 @@
 </main>
 
 <script>
+    // Language Toggle logic
     const button = document.getElementById('btn-lang');
-    button.addEventListener('click', () => document.getElementById('page-body').classList.toggle('spanish-mode'));
+    button.addEventListener('click', () => {
+        document.getElementById('page-body').classList.toggle('spanish-mode');
+    });
 
-    // Pulling info from URL parameters
-    const params = new URLSearchParams(window.location.search);
-    document.getElementById('user-display').textContent = params.get('user_email') || 'District User';
-    document.getElementById('url-display').textContent = params.get('url') || 'Restricted Site';
-    document.getElementById('policy-display').textContent = params.get('policy') || 'Standard Filter';
+    // Extracting Deledao Data
+    try {
+        const p = new URLSearchParams(window.location.search);
+        
+        // Helper to set values and strip token characters
+        const set = (id, val) => {
+            if(val && !val.includes('$')) {
+                document.getElementById(id).textContent = val;
+            }
+        };
+
+        set('u-val', p.get('user'));
+        set('ou-val', p.get('ou'));
+        set('r-val', p.get('rule'));
+        set('c-val', p.get('cust'));
+        set('v-val', p.get('ver'));
+        set('pv-val', p.get('pver'));
+
+        const rawUrl = p.get('url');
+        if (rawUrl && !rawUrl.includes('$')) {
+            // Cleans the URL to show only the domain for the teacher report
+            document.getElementById('url-val').textContent = rawUrl.replace(/^https?:\/\//, '').split('/')[0];
+        }
+
+    } catch (e) {
+        console.error("Policy Data Load Error:", e);
+    }
 </script>
 
 </body>
