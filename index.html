@@ -28,17 +28,30 @@
             box-sizing: border-box;
         }
 
-        .lang-toggle {
-            background: #00AAD7; color: white; border: none; padding: 10px 20px;
-            border-radius: 20px; cursor: pointer; font-weight: bold;
-            margin-bottom: 20px; font-size: 14px; position: relative; z-index: 99;
+        /* Fixed Button Styling */
+        #btn-lang {
+            background-color: transparent;
+            color: #00AAD7;
+            border: 1px solid #00AAD7;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 20px;
+            display: inline-block;
         }
+        #btn-lang:hover { background-color: #00AAD7; color: #121212; }
 
         .district { color: #dfdfdf; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
         h1 { color: #00AAD7; font-size: 42px; font-weight: 700; margin: 10px 0; }
         .warning { background-color: #ffcc00; color: #000; padding: 12px; font-size: 14px; margin: 15px auto; font-weight: 900; display: inline-block; border-radius: 4px; text-transform: uppercase; }
         
-        .data-box { background: rgba(0, 0, 0, 0.6); border: 2px solid #00AAD7; border-radius: 4px; padding: 20px; text-align: left; font-size: 14px; }
+        .data-box { background: rgba(0, 0, 0, 0.6); border: 2px solid #00AAD7; border-radius: 4px; padding: 20px; text-align: left; font-size: 14px; line-height: 1.6; }
         .data-box b { color: #00AAD7; }
         .teacher-notes { margin-top: 15px; padding-top: 15px; border-top: 1px solid #444; color: #fff; font-size: 13px; line-height: 1.5; }
         
@@ -56,7 +69,7 @@
 <div class="background-overlay"></div>
 
 <main class="card" role="main">
-    <button id="btn-lang" type="button" aria-label="Switch Language">English / Español</button>
+    <button id="btn-lang" type="button">English / Español</button>
 
     <div class="district">Maricopa County<br>Regional School District</div>
     
@@ -76,13 +89,10 @@
     </div>
 
     <div class="data-box">
-        <div>
-            <b><span class="en-text">Student:</span><span class="es-text">Estudiante:</span></b> <span id="user-display">Loading...</span>
-        </div>
-        <div>
-            <b><span class="en-text">Website:</span><span class="es-text">Sitio Web:</span></b> <span id="url-display">Restricted Site</span>
-        </div>
-        <div><b>Source:</b> Deledao Web Filter</div>
+        <div><b><span class="en-text">Student:</span><span class="es-text">Estudiante:</span></b> <span id="user-display">Loading...</span></div>
+        <div><b><span class="en-text">Website:</span><span class="es-text">Sitio Web:</span></b> <span id="url-display">Restricted Site</span></div>
+        <div><b><span class="en-text">Source:</span><span class="es-text">Fuente:</span></b> Deledao Web Filter</div>
+        <div><b><span class="en-text">Policy:</span><span class="es-text">Política:</span></b> <span id="policy-display">Default Policy</span></div>
         
         <div class="teacher-notes">
             <b style="color: #ffcc00;">
@@ -101,20 +111,14 @@
 </main>
 
 <script>
-    // Toggle Logic
     const button = document.getElementById('btn-lang');
-    const body = document.getElementById('page-body');
-    button.addEventListener('click', function() {
-        body.classList.toggle('spanish-mode');
-    });
+    button.addEventListener('click', () => document.getElementById('page-body').classList.toggle('spanish-mode'));
 
-    // Deledao Parameter Parsing
+    // Pulling info from URL parameters
     const params = new URLSearchParams(window.location.search);
-    const student = params.get('user_email') || 'District User';
-    const siteUrl = params.get('url') || 'Restricted Site';
-
-    document.getElementById('user-display').textContent = student;
-    document.getElementById('url-display').textContent = siteUrl;
+    document.getElementById('user-display').textContent = params.get('user_email') || 'District User';
+    document.getElementById('url-display').textContent = params.get('url') || 'Restricted Site';
+    document.getElementById('policy-display').textContent = params.get('policy') || 'Standard Filter';
 </script>
 
 </body>
