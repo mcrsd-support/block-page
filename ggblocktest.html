@@ -23,7 +23,7 @@
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 90%; max-width: 600px; padding: 25px; text-align: center; 
             border-radius: 8px; border: 1px solid #00AAD7; 
-            background: rgba(18, 18, 18, 0.96);
+            background: rgba(18, 18, 18, 0.98);
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             box-sizing: border-box;
         }
@@ -31,10 +31,8 @@
         .lang-toggle {
             background: #00AAD7; color: white; border: none; padding: 10px 20px;
             border-radius: 20px; cursor: pointer; font-weight: bold;
-            margin-bottom: 20px; font-size: 14px; transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-bottom: 20px; font-size: 14px; z-index: 10; position: relative;
         }
-        .lang-toggle:hover { background: #008cb1; transform: scale(1.05); }
 
         .district { color: #dfdfdf; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
         h1 { color: #00AAD7; font-size: 42px; font-weight: 700; margin: 10px 0; }
@@ -46,11 +44,14 @@
         
         footer { margin-top: 30px; font-size: 12.5px; color: #888; text-transform: uppercase; }
 
-        /* Hidden by default */
-        .is-es { display: none; }
+        /* CSS Logic for Switching Language without 'Display: None' */
+        .es-text { display: none; }
+        body.spanish-mode .en-text { display: none; }
+        body.spanish-mode .es-text { display: inline-block; }
+        body.spanish-mode div.es-text { display: block; }
     </style>
 </head>
-<body>
+<body id="page-body">
 
 <div class="background-overlay"></div>
 
@@ -59,62 +60,50 @@
 
     <div class="district">Maricopa County<br>Regional School District</div>
     
-    <div class="lang-content">
-        <div class="is-en">
-            <h1>Access Restricted</h1>
-            <p style="font-size: 18px;">This website has been blocked by your administrator.</p>
-            <div class="warning">Attempt Logged &amp; Reported</div>
-        </div>
+    <h1>
+        <span class="en-text">Access Restricted</span>
+        <span class="es-text">Acceso Restringido</span>
+    </h1>
 
-        <div class="is-es">
-            <h1>Acceso Restringido</h1>
-            <p style="font-size: 18px;">Este sitio web ha sido bloqueado por su administrador.</p>
-            <div class="warning">Intento Registrado e Informado</div>
-        </div>
+    <p style="font-size: 18px;">
+        <span class="en-text">This website has been blocked by your administrator.</span>
+        <span class="es-text">Este sitio web ha sido bloqueado por su administrador.</span>
+    </p>
+
+    <div class="warning">
+        <span class="en-text">Attempt Logged &amp; Reported</span>
+        <span class="es-text">Intento Registrado e Informado</span>
     </div>
 
     <div class="data-box">
-        <div><b class="is-en">Student:</b><b class="is-es">Estudiante:</b> {{STUDENT_EMAIL}}</div>
-        <div><b class="is-en">Website:</b><b class="is-es">Sitio Web:</b> {{URL}}</div>
+        <div>
+            <b><span class="en-text">Student:</span><span class="es-text">Estudiante:</span></b> {{STUDENT_EMAIL}}
+        </div>
+        <div>
+            <b><span class="en-text">Website:</span><span class="es-text">Sitio Web:</span></b> {{URL}}
+        </div>
         <div><b>Source:</b> GoGuardian Admin</div>
         
         <div class="teacher-notes">
-            <div class="is-en">
-                <b style="color: #ffcc00;">TEACHER INSTRUCTIONS:</b><br>
-                1. Take a screenshot of this entire screen.<br>
-                2. Email the screenshot to the MCRSD Help Desk.
-            </div>
-            <div class="is-es">
-                <b style="color: #ffcc00;">INSTRUCCIONES PARA EL MAESTRO:</b><br>
-                1. Tome una captura de pantalla completa.<br>
-                2. Envíe la captura al Help Desk de MCRSD.
-            </div>
+            <b style="color: #ffcc00;">
+                <span class="en-text">TEACHER INSTRUCTIONS:</span>
+                <span class="es-text">INSTRUCCIONES PARA EL MAESTRO:</span>
+            </b><br>
+            <span class="en-text">1. Take a screenshot of this entire screen.<br>2. Email it to the Help Desk.</span>
+            <span class="es-text">1. Tome una captura de pantalla completa.<br>2. Envíela al Help Desk.</span>
         </div>
     </div>
 
     <footer>
-        <span class="is-en">WCAG 2.1 &amp; ADA Compliant Filter Page</span>
-        <span class="is-es">Página compatible con ADA y WCAG 2.1</span>
+        <span class="en-text">WCAG 2.1 &amp; ADA Compliant Filter Page</span>
+        <span class="es-text">Página compatible con ADA y WCAG 2.1</span>
     </footer>
 </main>
 
 <script>
     function toggleLang() {
-        const enElements = document.querySelectorAll('.is-en');
-        const esElements = document.querySelectorAll('.is-es');
-        
-        // Check if English is currently visible
-        const isEnVisible = window.getComputedStyle(enElements[0]).display !== 'none';
-
-        if (isEnVisible) {
-            // Switch to Spanish
-            enElements.forEach(el => el.style.display = 'none');
-            esElements.forEach(el => el.style.display = 'block');
-        } else {
-            // Switch to English
-            enElements.forEach(el => el.style.display = 'block');
-            esElements.forEach(el => el.style.display = 'none');
-        }
+        // Toggle a single class on the body. CSS handles the rest.
+        document.getElementById('page-body').classList.toggle('spanish-mode');
     }
 </script>
 
