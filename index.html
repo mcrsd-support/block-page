@@ -23,8 +23,8 @@
         .teacher-notes { grid-column: span 2; margin-top: 10px; padding-top: 10px; border-top: 1px solid #444; color: #fff; font-size: 12px; line-height: 1.4; border-bottom: none; white-space: normal; }
         footer { margin-top: 20px; font-size: 10px; color: #666; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
         .compliance-tag { color: #888; font-weight: 700; border: 1px solid #444; padding: 2px 6px; border-radius: 3px; font-size: 9px; }
-        .deledao-badge { color: #00AAD7; font-weight: bold; }
-        
+        #debug-log { font-size: 8px; color: #444; margin-top: 10px; text-align: left; overflow-wrap: break-word; max-height: 20px; }
+
         .es-text { display: none; }
         .spanish-mode .en-text { display: none; }
         .spanish-mode .es-text { display: inline-block; }
@@ -42,13 +42,10 @@
     <div class="data-grid">
         <div class="full-width"><b>Student:</b> <span id="uid-display">---</span></div>
         <div class="full-width"><b>Website:</b> <span id="site-display">---</span></div>
-        
         <div><b>OU:</b> <span id="ou-display">---</span></div>
         <div><b>Source:</b> <span id="pgroup-display">---</span></div>
-        
         <div class="full-width"><b>Category:</b> <span id="category-display">---</span></div>
         <div class="full-width"><b>District:</b> <span id="cname-display">---</span></div>
-
         <div class="teacher-notes">
             <b style="color: #ffcc00;"><span class="en-text">TEACHER ACTION:</span><span class="es-text">ACCIÓN DEL MAESTRO:</span></b><br>
             <span class="en-text">Please screenshot this page for the IT Help Desk.</span>
@@ -56,10 +53,11 @@
         </div>
     </div>
     <footer>
-        <span class="deledao-badge">SECURED BY DELEDAO</span>
+        <span style="color: #00AAD7; font-weight: bold;">SECURED BY DELEDAO</span>
         <span class="compliance-tag">ADA & WCAG 2.1 COMPLIANT</span>
-        <span>VER: 1.0.6</span>
+        <span>VER: 1.0.7</span>
     </footer>
+    <div id="debug-log"></div>
 </main>
 
 <script>
@@ -67,32 +65,40 @@
         document.getElementById('page-body').classList.toggle('spanish-mode');
     });
 
-    try {
-        const params = new URLSearchParams(window.location.search);
-        
-        const fill = (id, key) => {
-            let val = params.get(key);
-            if (val) {
-                document.getElementById(id).textContent = decodeURIComponent(val);
+    (function() {
+        try {
+            // Using the exact extraction method from the Deledao sample file
+            const cururl = new URL(window.location.href);
+            const params = new URLSearchParams(cururl.search);
+            
+            // Show raw data for troubleshooting if things are missing
+            document.getElementById('debug-log').textContent = "Incoming: " + cururl.search.substring(0, 100);
+
+            const fill = (id, key) => {
+                let val = params.get(key);
+                if (val) {
+                    document.getElementById(id).textContent = decodeURIComponent(val);
+                }
+            };
+
+            // Mapping per documentation
+            fill('uid-display', 'uid');
+            fill('ou-display', 'ou');
+            fill('cname-display', 'cname');
+            fill('category-display', 'category');
+
+            let pgrp = params.get('pgroup');
+            if (pgrp) document.getElementById('pgroup-display').textContent = pgrp.toUpperCase();
+
+            let site = params.get('site');
+            if (site) {
+                let clean = decodeURIComponent(site).replace(/^https?:\/\//, '').split('/')[0];
+                document.getElementById('site-display').textContent = clean;
             }
-        };
-
-        fill('uid-display', 'uid');
-        fill('ou-display', 'ou');
-        fill('cname-display', 'cname');
-        fill('category-display', 'category');
-
-        let pgrp = params.get('pgroup');
-        if (pgrp) document.getElementById('pgroup-display').textContent = pgrp.toUpperCase();
-
-        let site = params.get('site');
-        if (site) {
-            let clean = decodeURIComponent(site).replace(/^https?:\/\//, '').split('/')[0];
-            document.getElementById('site-display').textContent = clean;
+        } catch (e) {
+            document.getElementById('debug-log').textContent = "Error: " + e.message;
         }
-    } catch (e) {
-        console.error("Filter Error:", e);
-    }
+    })();
 </script>
 </body>
 </html>
