@@ -34,12 +34,13 @@
         }
         .admin-data b { color: #00AAD7; }
         .teacher-notes { margin-top: 15px; padding-top: 15px; border-top: 1px solid #777; color: #fff; font-size: 13px; line-height: 1.5; }
-        .ada-footer { margin-top: 30px; font-size: 10px; color: #888; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        /* Bumped to 12px for ADA Alert fix */
+        .ada-footer { margin-top: 30px; font-size: 12px; color: #888; display: flex; align-items: center; justify-content: center; gap: 8px; }
     </style>
 </head>
 <body>
 
-<div class="mcrsd-container" role="alert" aria-live="assertive">
+<main class="mcrsd-container" role="alert" aria-live="assertive">
     <div class="mcrsd-card">
         <div class="mcrsd-district">Maricopa County Regional School District</div>
         <div class="lock-icon" role="img" aria-label="Security Lock Icon"></div>
@@ -60,15 +61,14 @@
             </div>
         </div>
 
-        <div class="ada-footer">
+        <footer class="ada-footer">
             <i class="fa fa-universal-access" aria-hidden="true"></i>
             <span>WCAG 2.1 & ADA COMPLIANT FILTER PAGE</span>
-        </div>
+        </footer>
     </div>
-</div>
+</main>
 
 <script>
-    // This part grabs the data from Deledao and puts it on the screen
     const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('user_email').textContent = urlParams.get('user_email') || 'Internal User';
     document.getElementById('blocked_url').textContent = urlParams.get('url') || 'Restricted Site';
