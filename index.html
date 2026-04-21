@@ -1,83 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Restricted | MCRSD</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Roboto:400,700,900');
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background-color: #121212; color: #fcfcfc; font-family: 'Roboto', Arial, sans-serif; overflow: hidden; }
-        .background-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #333 0%, #121212 100%); z-index: -1; }
-        .card { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 650px; padding: 25px; text-align: center; border-radius: 8px; border: 2px solid #00AAD7; background: rgba(18, 18, 18, 0.98); box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box; }
-        #btn-lang { background-color: transparent; color: #00AAD7; border: 2px solid #00AAD7; padding: 10px 20px; border-radius: 4px; font-family: 'Roboto', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; transition: all 0.2s ease; margin-bottom: 15px; display: inline-block; }
-        #btn-lang:hover { background-color: #00AAD7; color: #121212; }
-        .district { color: #dfdfdf; font-size: 14px; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
-        h1 { color: #00AAD7; font-size: 36px; font-weight: 900; margin: 10px 0; }
-        .warning { background-color: #ffcc00; color: #000; padding: 8px 15px; font-size: 13px; margin: 10px auto; font-weight: 900; display: inline-block; border-radius: 4px; text-transform: uppercase; }
-        
-        /* Data Grid Setup */
-        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0, 0, 0, 0.6); border: 1px solid #444; border-radius: 4px; padding: 15px; text-align: left; font-size: 13px; }
-        .data-grid div { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-bottom: 1px solid #222; padding: 4px 0; }
-        .data-grid b { color: #00AAD7; text-transform: uppercase; font-size: 10px; margin-right: 5px; }
-        .full-width { grid-column: span 2; }
-        
-        .teacher-notes { grid-column: span 2; margin-top: 10px; padding-top: 10px; border-top: 1px solid #444; color: #fff; font-size: 12px; line-height: 1.4; border-bottom: none; }
-        footer { margin-top: 20px; font-size: 11px; color: #888; text-transform: uppercase; }
-        .es-text { display: none; }
-        .spanish-mode .en-text { display: none; }
-        .spanish-mode .es-text { display: inline-block; }
-    </style>
-</head>
-<body id="page-body">
-<div class="background-overlay"></div>
-<main class="card" role="alert">
-    <button id="btn-lang" type="button">English / Español</button>
-    <div class="district">Maricopa County Regional School District</div>
-    <h1><span class="en-text">Access Restricted</span><span class="es-text">Acceso Restringido</span></h1>
-    <p><span class="en-text">This website has been blocked by your administrator.</span><span class="es-text">Este sitio web ha sido bloqueado por su administrador.</span></p>
-    <div class="warning"><span class="en-text">Security Violation Logged</span><span class="es-text">Violación de Seguridad Registrada</span></div>
-
-    <div class="data-grid">
-        <div class="full-width"><b>Student:</b> <span id="u-val">---</span></div>
-        <div class="full-width"><b>Website:</b> <span id="url-val">---</span></div>
-        
-        <div><b>OU:</b> <span id="ou-val">---</span></div>
-        <div><b>Policy:</b> <span id="p-val">---</span></div>
-        
-        <div><b>Category:</b> <span id="cat-val">---</span></div>
-        <div><b>Reason:</b> <span id="r-val">---</span></div>
-        
-        <div class="full-width"><b>District:</b> <span id="c-val">---</span></div>
-
-        <div class="teacher-notes">
-            <b style="color: #ffcc00;"><span class="en-text">TEACHER ACTION:</span><span class="es-text">ACCIÓN DEL MAESTRO:</span></b><br>
-            <span class="en-text">Take a screenshot of this report for the IT Help Desk.</span>
-            <span class="es-text">Capture esta pantalla para el soporte técnico.</span>
-        </div>
-    </div>
-    <footer>ADA & WCAG 2.1 COMPLIANT</footer>
-</main>
-
 <script>
-    document.getElementById('btn-lang').addEventListener('click', () => document.getElementById('page-body').classList.toggle('spanish-mode'));
+    document.getElementById('btn-lang').addEventListener('click', () => {
+        document.getElementById('page-body').classList.toggle('spanish-mode');
+    });
 
     try {
-        const p = new URLSearchParams(window.location.search);
-        
-        // Mapping Deledao's automatic parameters
-        document.getElementById('u-val').textContent = p.get('uid') || '---';
-        document.getElementById('ou-val').textContent = p.get('ou') || '---';
-        document.getElementById('p-val').textContent = p.get('pgroup') || 'Standard Policy';
-        document.getElementById('cat-val').textContent = p.get('category') || 'Restricted Content';
-        document.getElementById('r-val').textContent = p.get('reason') || 'Blocked by Policy';
-        document.getElementById('c-val').textContent = p.get('cname') || 'MCRSD';
+        const cururl = new URL(window.location.href);
+        const p = new URLSearchParams(cururl.search);
 
-        const rawUrl = p.get('site');
-        if (rawUrl) {
-            // Clean URL to show only domain
-            document.getElementById('url-val').textContent = rawUrl.replace(/^https?:\/\//, '').split('/')[0];
+        // Official Deledao Mappings
+        const set = (id, val) => { 
+            if(val) document.getElementById(id).textContent = val; 
+        };
+
+        set('u-val', p.get('uid'));
+        set('ou-val', p.get('ou'));
+        set('p-val', p.get('pgroup'));
+        set('c-val', p.get('cname'));
+        set('cat-val', p.get('category'));
+        set('r-val', p.get('reason') || 'Policy Violation');
+
+        // URL Handling with Decoding
+        let blockedUrl = p.get('site');
+        if (blockedUrl) {
+            blockedUrl = decodeURIComponent(blockedUrl);
+            // Clean it up for display: strip https:// and show only the domain
+            document.getElementById('url-val').textContent = blockedUrl.replace(/^https?:\/\//, '').split('/')[0];
         }
-    } catch (e) { console.error("Error loading Deledao data", e); }
+
+    } catch (e) { 
+        console.error("Data Load Error:", e); 
+    }
 </script>
-</body>
-</html>
