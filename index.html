@@ -61,23 +61,30 @@
     });
 
     try {
-        // Use the official Deledao parameters from the documentation
         const params = new URLSearchParams(window.location.search);
         
-        const setVal = (id, paramName) => {
-            let val = params.get(paramName);
-            if (val) {
-                document.getElementById(id).textContent = decodeURIComponent(val);
-            }
-        };
+        // 1. Map Student (uid)
+        const uid = params.get('uid');
+        if (uid) document.getElementById('uid-display').textContent = decodeURIComponent(uid);
 
-        setVal('uid-display', 'uid');
-        setVal('ou-display', 'ou');
-        setVal('pgroup-display', 'pgroup');
-        setVal('cname-display', 'cname');
-        setVal('category-display', 'category');
+        // 2. Map OU (ou)
+        const ou = params.get('ou');
+        if (ou) document.getElementById('ou-display').textContent = decodeURIComponent(ou);
 
-        // Special handling for the URL to keep it clean
+        // 3. Map District (cname)
+        const cname = params.get('cname');
+        if (cname) document.getElementById('cname-display').textContent = decodeURIComponent(cname);
+
+        // 4. Map Category
+        const category = params.get('category');
+        if (category) document.getElementById('category-display').textContent = decodeURIComponent(category);
+
+        // 5. Map Policy Type (pgroup)
+        // Deledao sends 'school', 'classroom', or 'parent' here
+        const pgroup = params.get('pgroup');
+        if (pgroup) document.getElementById('pgroup-display').textContent = pgroup.toUpperCase();
+
+        // 6. Map Website (site)
         let rawSite = params.get('site');
         if (rawSite) {
             let cleanSite = decodeURIComponent(rawSite).replace(/^https?:\/\//, '').split('/')[0];
