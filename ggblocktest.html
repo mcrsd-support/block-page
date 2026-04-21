@@ -6,79 +6,117 @@
     <title>Access Restricted | MCRSD</title>
     <style>
         @import url('https://fonts.googleapis.com/css?family=Roboto:400,700,900');
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background-color: #121212; color: #fcfcfc; font-family: 'Roboto', Arial, sans-serif; overflow: hidden; }
-        .background-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #333 0%, #121212 100%); z-index: -1; }
-        .card { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 600px; padding: 25px; text-align: center; border-radius: 8px; border: 1px solid #00AAD7; background: rgba(18, 18, 18, 0.94); box-shadow: 0 10px 30px rgba(0,0,0,0.8); box-sizing: border-box; }
-        .lang-toggle { background: #00AAD7; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; margin-bottom: 15px; font-size: 14px; transition: 0.3s; }
-        .district { color: #dfdfdf; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; line-height: 1.2; }
+        
+        body, html { 
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            background-color: #121212; color: #fcfcfc; 
+            font-family: 'Roboto', Arial, sans-serif; overflow: hidden;
+        }
+
+        .background-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #333 0%, #121212 100%);
+            z-index: -1;
+        }
+
+        .card { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 600px; padding: 25px; text-align: center; 
+            border-radius: 8px; border: 1px solid #00AAD7; 
+            background: rgba(18, 18, 18, 0.96);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            box-sizing: border-box;
+        }
+
+        .lang-toggle {
+            background: #00AAD7; color: white; border: none; padding: 10px 20px;
+            border-radius: 20px; cursor: pointer; font-weight: bold;
+            margin-bottom: 20px; font-size: 14px; transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .lang-toggle:hover { background: #008cb1; transform: scale(1.05); }
+
+        .district { color: #dfdfdf; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
         h1 { color: #00AAD7; font-size: 42px; font-weight: 700; margin: 10px 0; }
         .warning { background-color: #ffcc00; color: #000; padding: 12px; font-size: 14px; margin: 15px auto; font-weight: 900; display: inline-block; border-radius: 4px; text-transform: uppercase; }
+        
         .data-box { background: rgba(0, 0, 0, 0.6); border: 2px solid #00AAD7; border-radius: 4px; padding: 20px; text-align: left; font-size: 14px; }
         .data-box b { color: #00AAD7; }
         .teacher-notes { margin-top: 15px; padding-top: 15px; border-top: 1px solid #444; color: #fff; font-size: 13px; line-height: 1.5; }
-        /* FIX: Increased text size for 'Very small text' alert */
+        
         footer { margin-top: 30px; font-size: 12.5px; color: #888; text-transform: uppercase; }
-        [lang="es"] { display: none; }
+
+        /* Hidden by default */
+        .is-es { display: none; }
     </style>
 </head>
 <body>
+
 <div class="background-overlay"></div>
 
 <main class="card" role="main">
-    <button class="lang-toggle" onclick="toggleLang()" aria-label="Switch Language / Cambiar Idioma">English / Español</button>
+    <button class="lang-toggle" onclick="toggleLang()" aria-label="Switch Language">English / Español</button>
+
     <div class="district">Maricopa County<br>Regional School District</div>
     
-    <div id="en-content" lang="en">
-        <h1>Access Restricted</h1>
-        <p style="font-size: 18px;">This website has been blocked by your administrator.</p>
-        <div class="warning">Attempt Logged &amp; Reported</div>
-    </div>
+    <div class="lang-content">
+        <div class="is-en">
+            <h1>Access Restricted</h1>
+            <p style="font-size: 18px;">This website has been blocked by your administrator.</p>
+            <div class="warning">Attempt Logged &amp; Reported</div>
+        </div>
 
-    <div id="es-content" lang="es">
-        <h1>Acceso Restringido</h1>
-        <p style="font-size: 18px;">Este sitio web ha sido bloqueado por su administrador.</p>
-        <div class="warning">Intento Registrado e Informado</div>
+        <div class="is-es">
+            <h1>Acceso Restringido</h1>
+            <p style="font-size: 18px;">Este sitio web ha sido bloqueado por su administrador.</p>
+            <div class="warning">Intento Registrado e Informado</div>
+        </div>
     </div>
 
     <div class="data-box">
-        <div><b id="label-student">Student:</b> {{STUDENT_EMAIL}}</div>
-        <div><b id="label-site">Website:</b> {{URL}}</div>
+        <div><b class="is-en">Student:</b><b class="is-es">Estudiante:</b> {{STUDENT_EMAIL}}</div>
+        <div><b class="is-en">Website:</b><b class="is-es">Sitio Web:</b> {{URL}}</div>
         <div><b>Source:</b> GoGuardian Admin</div>
+        
         <div class="teacher-notes">
-            <div lang="en">
+            <div class="is-en">
                 <b style="color: #ffcc00;">TEACHER INSTRUCTIONS:</b><br>
                 1. Take a screenshot of this entire screen.<br>
                 2. Email the screenshot to the MCRSD Help Desk.
             </div>
-            <div id="es-notes" lang="es">
+            <div class="is-es">
                 <b style="color: #ffcc00;">INSTRUCCIONES PARA EL MAESTRO:</b><br>
                 1. Tome una captura de pantalla completa.<br>
                 2. Envíe la captura al Help Desk de MCRSD.
             </div>
         </div>
     </div>
-    <footer id="footer-text">WCAG 2.1 &amp; ADA Compliant Filter Page</footer>
+
+    <footer>
+        <span class="is-en">WCAG 2.1 &amp; ADA Compliant Filter Page</span>
+        <span class="is-es">Página compatible con ADA y WCAG 2.1</span>
+    </footer>
 </main>
 
 <script>
     function toggleLang() {
-        const enElements = document.querySelectorAll('[lang="en"]');
-        const esElements = document.querySelectorAll('[lang="es"]');
-        const isEnglish = enElements[0].style.display !== 'none';
-        if (isEnglish) {
+        const enElements = document.querySelectorAll('.is-en');
+        const esElements = document.querySelectorAll('.is-es');
+        
+        // Check if English is currently visible
+        const isEnVisible = window.getComputedStyle(enElements[0]).display !== 'none';
+
+        if (isEnVisible) {
+            // Switch to Spanish
             enElements.forEach(el => el.style.display = 'none');
             esElements.forEach(el => el.style.display = 'block');
-            document.getElementById('label-student').textContent = 'Estudiante:';
-            document.getElementById('label-site').textContent = 'Sitio Web:';
-            document.getElementById('footer-text').textContent = 'Página compatible con ADA y WCAG 2.1';
         } else {
+            // Switch to English
             enElements.forEach(el => el.style.display = 'block');
             esElements.forEach(el => el.style.display = 'none');
-            document.getElementById('label-student').textContent = 'Student:';
-            document.getElementById('label-site').textContent = 'Website:';
-            document.getElementById('footer-text').textContent = 'WCAG 2.1 & ADA Compliant Filter Page';
         }
     }
 </script>
+
 </body>
 </html>
